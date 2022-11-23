@@ -14,6 +14,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.*;
 
 /**
  *
@@ -24,7 +25,18 @@ public class AdminFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
+      HttpServletRequest httpRequest = (HttpServletRequest) request;
+      HttpServletResponse httpResponse = (HttpServletResponse) response;
       
-    }
+      String role = (String) httpRequest.getSession().getAttribute("role");
+      
+      if (role != null && role.equals("admin")) {
+                chain.doFilter(request, response);
+                return;
+      }
+      
+      httpResponse.sendRedirect("notes");
 
+    
+    }
 }
